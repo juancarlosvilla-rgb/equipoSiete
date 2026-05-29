@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_margin="8dp"
-    app:cardBackgroundColor="#CC000000"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
+    app:cardBackgroundColor="#000000"
     app:cardCornerRadius="30dp"
-    app:cardElevation="10dp">
+    app:cardElevation="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="5dp">
 
         <ImageButton
             android:id="@+id/btnStar"
@@ -22,7 +23,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/btn_star_big_on"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnVolume"
@@ -31,7 +32,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_lock_silent_mode_off"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnInstructions"
@@ -40,7 +41,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_help"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnAddChallenge"
@@ -49,7 +50,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_add"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnShare"
@@ -58,6 +59,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_share"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
