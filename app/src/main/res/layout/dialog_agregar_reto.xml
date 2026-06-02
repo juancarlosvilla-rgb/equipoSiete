@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Criterio 2: Título Negro Bold centrado -->
+        <!-- Título Negro Bold centrado -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Criterio 3: Hint y línea naranja -->
+        <!-- Hint y línea naranja -->
         <EditText
             android:id="@+id/etNuevoReto"
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!-- Criterio 4: Botón Cancelar -->
+            <!-- Botón Cancelar -->
             <Button
                 android:id="@+id/btnCancelarDialog"
                 android:layout_width="0dp"
@@ -51,7 +51,7 @@
                 android:text="Cancelar"
                 android:textColor="#FFFFFF" />
 
-            <!-- Criterio 5: Botón Guardar  -->
+            <!--  Botón Guardar  -->
             <Button
                 android:id="@+id/btnGuardarDialog"
                 android:layout_width="0dp"

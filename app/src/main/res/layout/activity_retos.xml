@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#333333">
 
-    <!-- Toolbar Personalizada (Criterio 3) -->
+    <!-- Toolbar Personalizada -->
     <RelativeLayout
         android:id="@+id/toolbarRetos"
         android:layout_width="match_parent"

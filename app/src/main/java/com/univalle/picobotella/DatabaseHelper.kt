@@ -42,7 +42,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "PicoBotella.
         db.close()
     }
 
-    // Listar (HU 6.0) - Criterio 6: El más reciente arriba
+    // Listar (HU 6.0) - El más reciente arriba
     fun obtenerRetos(): MutableList<RetoModel> {
         val lista = mutableListOf<RetoModel>()
         val db = this.readableDatabase

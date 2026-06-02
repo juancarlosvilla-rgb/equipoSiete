@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Criterio 2: Título Negro Bold Centrado -->
+        <!--Título Negro Bold Centrado -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:gravity="center"
             android:layout_marginBottom="15dp"/>
 
-        <!-- Criterio 3: Descripción del reto a eliminar -->
+        <!-- Descripción del reto a eliminar -->
         <TextView
             android:id="@+id/txtRetoAEliminar"
             android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:orientation="horizontal"
             android:gravity="end">
 
-            <!-- Criterio 4: Botón NO (Texto naranja) -->
+            <!-- Botón NO (Texto naranja) -->
             <Button
                 android:id="@+id/btnNoEliminar"
                 style="?attr/borderlessButtonStyle"
@@ -52,7 +52,7 @@
                 android:textColor="#FF4500"
                 android:textStyle="bold" />
 
-            <!-- Criterio 5: Botón SI (Texto naranja) -->
+            <!-- Botón SI (Texto naranja) -->
             <Button
                 android:id="@+id/btnSiEliminar"
                 style="?attr/borderlessButtonStyle"
