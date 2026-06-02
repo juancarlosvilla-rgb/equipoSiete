@@ -98,6 +98,39 @@ class RetosActivity : AppCompatActivity() {
         }
     }
 
+    // Agrega esta función dentro de RetosActivity
+    fun mostrarDialogoEditar(reto: RetoModel) {
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_editar_reto, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setCancelable(false) // Criterio 7
+
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val etReto = mDialogView.findViewById<EditText>(R.id.etEditarReto)
+        val btnGuardar = mDialogView.findViewById<Button>(R.id.btnGuardarEdit)
+        val btnCancelar = mDialogView.findViewById<Button>(R.id.btnCancelarEdit)
+
+        // Criterio 3: Mostrar la descripción actual que viene de la BD
+        etReto.setText(reto.descripcion)
+
+        btnCancelar.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+
+        btnGuardar.setOnClickListener {
+            val nuevoTexto = etReto.text.toString().trim()
+            if (nuevoTexto.isNotEmpty()) {
+                // Criterio 6: Guardar en SQLite y listar inmediatamente
+                db.editarReto(reto.id, nuevoTexto)
+                actualizarLista()
+                mAlertDialog.dismiss()
+                Toast.makeText(this, "Reto actualizado", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun actualizarLista() {
         val listaRetos = db.obtenerRetos()
         val adapter = RetoAdapter(this, listaRetos)
