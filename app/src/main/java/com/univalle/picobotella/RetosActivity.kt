@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -98,7 +99,7 @@ class RetosActivity : AppCompatActivity() {
         }
     }
 
-    // Agrega esta función dentro de RetosActivity
+
     fun mostrarDialogoEditar(reto: RetoModel) {
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_editar_reto, null)
         val mBuilder = AlertDialog.Builder(this)
@@ -128,6 +129,37 @@ class RetosActivity : AppCompatActivity() {
                 mAlertDialog.dismiss()
                 Toast.makeText(this, "Reto actualizado", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    // Agrega esta función dentro de RetosActivity
+    fun mostrarDialogoEliminar(reto: RetoModel) {
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_eliminar_reto, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setCancelable(false) // Criterio 6: No se cierra al dar clic fuera
+
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val txtDescripcion = mDialogView.findViewById<TextView>(R.id.txtRetoAEliminar)
+        val btnSi = mDialogView.findViewById<Button>(R.id.btnSiEliminar)
+        val btnNo = mDialogView.findViewById<Button>(R.id.btnNoEliminar)
+
+        // Criterio 3: Mostrar la descripción del reto
+        txtDescripcion.text = reto.descripcion
+
+        // Criterio 4: Al dar click en NO, cerrar el diálogo
+        btnNo.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+
+        // Criterio 5: Al dar click en SI, borrar de SQLite y refrescar lista
+        btnSi.setOnClickListener {
+            db.borrarReto(reto.id) // Llama a la función de DatabaseHelper
+            actualizarLista() // Refresca el ListView
+            mAlertDialog.dismiss()
+            Toast.makeText(this, "Reto eliminado", Toast.LENGTH_SHORT).show()
         }
     }
 
