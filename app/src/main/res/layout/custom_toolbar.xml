@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/btn_star_big_on"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnVolume"
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_lock_silent_mode_off"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnInstructions"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_help"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnAddChallenge"
@@ -50,7 +50,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_add"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
         <ImageButton
             android:id="@+id/btnShare"
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_share"
-            app:tint="#FF4500" />
+            app:tint="#FFA500" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
