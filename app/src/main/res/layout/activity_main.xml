@@ -59,34 +59,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 3. Asegúrate que el TextView del contador esté así (Grande y centrado) -->
-    <TextView
-        android:id="@+id/txtContador"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3"
-        android:textColor="#FF0000"
-        android:textSize="120sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imgBotellaMain"
-        app:layout_constraintEnd_toEndOf="@+id/imgBotellaMain"
-        app:layout_constraintStart_toStartOf="@+id/imgBotellaMain"
-        app:layout_constraintTop_toTopOf="@+id/imgBotellaMain" />
-
-    <!-- Botón parpadeante -->
-    <Button
-        android:id="@+id/btnPresioname"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:backgroundTint="#FF4500"
-        android:text="Presióname"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
