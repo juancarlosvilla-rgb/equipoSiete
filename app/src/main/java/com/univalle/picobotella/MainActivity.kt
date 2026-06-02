@@ -55,7 +55,16 @@ class MainActivity : AppCompatActivity() {
         // 5. Lógica de la Toolbar con Animaciones (HU 3.0)
         btnStar.setOnClickListener {
             aplicarAnimacionToque(it) {
-                Toast.makeText(this, "HU 4.0: Calificar (Próximamente)", Toast.LENGTH_SHORT).show()
+                // Criterio 1: Abrir el enlace de Nequi en la Play Store
+                val urlNequi = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                intent.data = android.net.Uri.parse(urlNequi)
+
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "No se pudo abrir la tienda", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
