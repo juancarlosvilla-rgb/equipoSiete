@@ -30,16 +30,36 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.497" />
 
-    <!-- 1. En la Toolbar (Añadimos margen superior para bajarla un poco) -->
-    <include
-        android:id="@+id/customToolbar"
-        layout="@layout/custom_toolbar"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txtContador"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="3"
+        android:textColor="#FF0000"
+        android:textSize="70sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:elevation="13dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgBotellaMain"
+        app:layout_constraintEnd_toEndOf="@+id/imgBotellaMain"
+        app:layout_constraintStart_toStartOf="@+id/imgBotellaMain"
+        app:layout_constraintTop_toTopOf="@+id/imgBotellaMain" />
 
-    <!-- 2. En la Botella (La agrandamos de 200dp a 280dp de ancho y 500dp de alto) -->
+    <!-- Botón parpadeante -->
+    <Button
+        android:id="@+id/btnPresioname"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="#FF4500"
+        android:text="Presióname"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    
 
     <!-- 3. Asegúrate que el TextView del contador esté así (Grande y centrado) -->
     <ImageView
