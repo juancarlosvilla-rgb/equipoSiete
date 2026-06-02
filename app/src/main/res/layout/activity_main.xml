@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/fondo_madera"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/piso_madera"> <!-- Fondo madera -->
+    android:layout_height="match_parent">
 
     <!-- 1. En la Toolbar (Añadimos margen superior para bajarla un poco) -->
     <include
@@ -16,6 +16,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 2. En la Botella (La agrandamos de 200dp a 280dp de ancho y 500dp de alto) -->
+
+    <!-- 3. Asegúrate que el TextView del contador esté así (Grande y centrado) -->
     <ImageView
         android:id="@+id/imgBotellaMain"
         android:layout_width="320dp"
@@ -23,20 +25,21 @@
         android:src="@drawable/ic_bottle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497" />
 
-    <!-- 3. Asegúrate que el TextView del contador esté así (Grande y centrado) -->
     <TextView
         android:id="@+id/txtContador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3"
         android:textColor="#FF0000"
-        android:textSize="120sp"
+        android:textSize="70sp"
         android:textStyle="bold"
         android:visibility="gone"
-        android:elevation="10dp"
+        android:elevation="13dp"
         app:layout_constraintBottom_toBottomOf="@+id/imgBotellaMain"
         app:layout_constraintEnd_toEndOf="@+id/imgBotellaMain"
         app:layout_constraintStart_toStartOf="@+id/imgBotellaMain"
