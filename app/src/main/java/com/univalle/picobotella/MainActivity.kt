@@ -89,7 +89,9 @@ class MainActivity : AppCompatActivity() {
 
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
-                Toast.makeText(this, "HU 6.0: Agregar Retos (Próximamente)", Toast.LENGTH_SHORT).show()
+                if (isAudioOn) mediaPlayer?.pause() // Pausa audio
+                val intent = Intent(this, RetosActivity::class.java)
+                startActivity(intent)
             }
         }
 

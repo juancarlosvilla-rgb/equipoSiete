@@ -26,6 +26,8 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <activity android:name=".RetosActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
