@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 5. Lógica de la Toolbar con Animaciones (HU 3.0)
 
         // HU 4.0: Calificar
         btnStar.setOnClickListener {
@@ -89,13 +88,32 @@ class MainActivity : AppCompatActivity() {
 
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
-                Toast.makeText(this, "HU 6.0: Agregar Retos (Próximamente)", Toast.LENGTH_SHORT).show()
+                if (isAudioOn) mediaPlayer?.pause() // Pausa audio
+                val intent = Intent(this, RetosActivity::class.java)
+                startActivity(intent)
             }
         }
 
+        // HU 10.0: Lógica compartir la aplicación
         btnShare.setOnClickListener {
             aplicarAnimacionToque(it) {
-                Toast.makeText(this, "HU 10.0: Compartir (Próximamente)", Toast.LENGTH_SHORT).show()
+                // Criterio 2: Definir el mensaje exacto solicitado
+                val tituloApp = "App pico botella."
+                val eslogan = "Solo los valientes lo juegan !!"
+                val urlApp = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
+
+                val mensajeFinal = "$tituloApp\n$eslogan\n$urlApp"
+
+                // Intent para mostrar el Bottom Sheet del sistema
+                val intentCompartir = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, mensajeFinal)
+                    type = "text/plain"
+                }
+
+                // Mostrar el selector de aplicaciones (Chooser)
+                val chooser = Intent.createChooser(intentCompartir, "Compartir con:")
+                startActivity(chooser)
             }
         }
     }
