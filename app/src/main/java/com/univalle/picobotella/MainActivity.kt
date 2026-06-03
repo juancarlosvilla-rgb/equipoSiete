@@ -1,6 +1,9 @@
 package com.univalle.picobotella
 
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +18,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import org.json.JSONObject
+import java.net.URL
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     // Variables de Estado
     private var isAudioOn = true
     private var isSpinning = false
-    private var ultimoAngulo = 0f // Guardar posición previa
+    private var ultimoAngulo = 0f // Criterio 4 HU 11: Guardar posición previa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +50,15 @@ class MainActivity : AppCompatActivity() {
         val btnAddChallenge = findViewById<ImageButton>(R.id.btnAddChallenge)
         val btnShare = findViewById<ImageButton>(R.id.btnShare)
 
-        // 2. Iniciar música de fondo
+        // 2. Iniciar música de fondo (HU 2.0 )
         mediaPlayerFondo = MediaPlayer.create(this, R.raw.musica_fondo)
         mediaPlayerFondo?.isLooping = true
         if (isAudioOn) mediaPlayerFondo?.start()
 
-        // 3. Iniciar parpadeo del botón
+        // 3. Iniciar parpadeo del botón (HU 2.0 )
         iniciarParpadeo(btnPresioname)
 
-        // 4. Lógica del Giro de Botella
+        // 4. Lógica del Giro de Botella (HU 11.0)
         btnPresioname.setOnClickListener {
             if (!isSpinning) {
                 lanzarGiroBotella(imgBotella, txtContador, btnPresioname)
@@ -116,45 +123,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- LÓGICA HU 11.0 (BOTELLA Y CUENTA REGRESIVA) ---
+    // --- LÓGICA HU 11.0 (GIRO Y CUENTA REGRESIVA) ---
 
     private fun lanzarGiroBotella(botella: ImageView, contador: TextView, boton: Button) {
         isSpinning = true
+        boton.visibility = View.GONE // Visibilidad del boton despues de girar la botella
+        boton.clearAnimation()
 
-        // El botón desaparece al iniciar
-        boton.visibility = View.GONE
-        boton.clearAnimation() // Detener parpadeo mientras no está
+        if (isAudioOn) mediaPlayerFondo?.pause() // Pausar música hasta que ciere el dialogo del reto
 
-        // Pausar música de fondo durante el giro
-        if (isAudioOn) mediaPlayerFondo?.pause()
-
-        // Iniciar sonido de giro
-        soundSpin = MediaPlayer.create(this, R.raw.sonido_giro)
+        soundSpin = MediaPlayer.create(this, R.raw.sonido_giro) // Criterio 2
         soundSpin?.start()
 
-        // Cálculo de giro aleatorio
-        val tiempoGiro = (3000..5000).random().toLong() // Entre 3 y 5 seg
+        val tiempoGiro = (3000..5000).random().toLong() // Tiempo de giro aleatorio de 3 a 5 segundos
         val vueltasExtra = (5..10).random()
         val gradosAleatorios = (vueltasExtra * 360) + (0..360).random()
-
-        // Sumamos al ángulo actual para que no salte
-        val anguloObjetivo = ultimoAngulo + gradosAleatorios
+        val anguloObjetivo = ultimoAngulo + gradosAleatorios // Ultimo angulo desde donde gira la botella
 
         botella.animate()
             .rotation(anguloObjetivo)
             .setDuration(tiempoGiro)
             .setInterpolator(DecelerateInterpolator())
             .withEndAction {
-                // Detener sonido de giro
                 soundSpin?.stop()
                 soundSpin?.release()
                 soundSpin = null
 
-                // Actualizar último ángulo
                 ultimoAngulo = anguloObjetivo
-
-                // Iniciar cuenta regresiva
-                iniciarCuentaRegresivaFinal(contador, boton)
+                iniciarCuentaRegresivaFinal(contador, boton) // Iniciar contador
             }
             .start()
     }
@@ -169,23 +165,53 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onFinish() {
                 contador.visibility = View.GONE
-
-                // Lanzar HU 12
-                Toast.makeText(this@MainActivity, "¡RETO SELECCIONADO!", Toast.LENGTH_SHORT).show()
-
-                // El botón vuelve a aparecer
+                mostrarDialogoRetoAleatorio() // Criterio 6 HU 11 y HU 12 completa
                 boton.visibility = View.VISIBLE
-                iniciarParpadeo(boton) // Reiniciar parpadeo
-
-                // El audio vuelve si estaba en ON
-                if (isAudioOn) mediaPlayerFondo?.start()
-
+                iniciarParpadeo(boton)
                 isSpinning = false
             }
         }.start()
     }
 
-    // --- FUNCIONES DE APOYO Y CICLO DE VIDA ---
+    // --- HU 12.0: MOSTRAR RETO ALEATORIO CON POKÉMON API ---
+    private fun mostrarDialogoRetoAleatorio() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_reto_aleatorio, null)
+        val builder = AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val txtReto = dialogView.findViewById<TextView>(R.id.txtRetoElegido)
+        val imgPoke = dialogView.findViewById<ImageView>(R.id.imgPokemon)
+        val btnCerrar = dialogView.findViewById<Button>(R.id.btnCerrarReto)
+
+        // HU 12: Traer reto aleatorio de SQLite
+        val db = DatabaseHelper(this)
+        txtReto.text = db.obtenerRetoAleatorio()
+
+        // HU 12: Consumir API de Pokemon
+        thread {
+            try {
+                val apiResponse = URL("https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json").readText()
+                val json = JSONObject(apiResponse)
+                val array = json.getJSONArray("pokemon")
+                val randomPoke = array.getJSONObject((0 until array.length()).random())
+                val imgUrl = randomPoke.getString("img").replace("http://", "https://")
+
+                runOnUiThread {
+                    Glide.with(this).load(imgUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imgPoke)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        btnCerrar.setOnClickListener {
+            dialog.dismiss()
+            if (isAudioOn) mediaPlayerFondo?.start() // Criterio 8 HU 11
+        }
+    }
+
+    // --- FUNCIONES AUXILIARES ---
 
     private fun alternarAudio(boton: ImageButton) {
         if (isAudioOn) {
