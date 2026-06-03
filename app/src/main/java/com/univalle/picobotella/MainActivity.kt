@@ -157,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun iniciarCuentaRegresivaFinal(contador: TextView, boton: Button) {
         contador.visibility = View.VISIBLE
+        // Cuenta de 3 a 0
         object : CountDownTimer(4000, 1000) {
             override fun onTick(ms: Long) {
                 val segundos = ms / 1000
