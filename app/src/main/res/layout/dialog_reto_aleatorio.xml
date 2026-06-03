@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="30dp">
+
+    <!-- Caja Principal -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardContenedor"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#CC000000"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <!-- Texto del reto (Blanco Bold) -->
+            <TextView
+                android:id="@+id/txtRetoElegido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="Cargando reto..."
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Círculo del Pokemon -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPokemon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:cardBackgroundColor="#000000"
+        app:cardCornerRadius="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardContenedor"
+        app:layout_constraintEnd_toEndOf="@+id/cardContenedor"
+        app:layout_constraintStart_toStartOf="@+id/cardContenedor"
+        app:layout_constraintTop_toTopOf="@+id/cardContenedor"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp">
+
+        <ImageView
+            android:id="@+id/imgPokemon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_menu_gallery" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botón Naranja (Mitad adentro, mitad afuera) -->
+    <Button
+        android:id="@+id/btnCerrarReto"
+        android:layout_width="120dp"
+        android:layout_height="45dp"
+        android:backgroundTint="#FF4500"
+        android:text="Cerrar"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/cardContenedor"
+        app:layout_constraintEnd_toEndOf="@+id/cardContenedor"
+        app:layout_constraintStart_toStartOf="@+id/cardContenedor"
+        app:layout_constraintTop_toBottomOf="@+id/cardContenedor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

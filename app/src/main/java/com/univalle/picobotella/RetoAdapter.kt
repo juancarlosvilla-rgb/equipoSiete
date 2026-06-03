@@ -25,16 +25,19 @@ class RetoAdapter(val context: Context, var lista: MutableList<RetoModel>) : Bas
 
         txtDesc.text = reto.descripcion
 
-        // Animación de toque Criterio 7 y acciones
+
         btnEdit.setOnClickListener {
             animarToque(it) {
-                Toast.makeText(context, "HU 8.0: Editar ID ${reto.id}", Toast.LENGTH_SHORT).show()
+                // Llamamos a la función de la actividad
+                (context as RetosActivity).mostrarDialogoEditar(reto)
             }
         }
 
+
         btnDelete.setOnClickListener {
             animarToque(it) {
-                Toast.makeText(context, "HU 9.0: Eliminar ID ${reto.id}", Toast.LENGTH_SHORT).show()
+                // Llamamos a la función de eliminar de la actividad
+                (context as RetosActivity).mostrarDialogoEliminar(reto)
             }
         }
 

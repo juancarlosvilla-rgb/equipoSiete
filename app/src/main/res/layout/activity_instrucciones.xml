@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"> <!-- Criterio 2 -->
+    android:background="@color/dark_gray"> <!-- Fondo Gris -->
 
-    <!-- Criterio 3: Toolbar personalizada -->
+    <!--Toolbar personalizada -->
     <RelativeLayout
         android:id="@+id/toolbarInstrucciones"
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:text="¿Cómo se juega?"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:textStyle="bold" /> <!-- Criterio 4 -->
+                android:textStyle="bold" /> <!-- Bold como se juega -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Los jugadores forman un círculo y en el centro colocan el dispositivo móvil, luego tocan el botón parpadeante para girar la botella. El jugador que señale la botella debe cumplir el reto que lanza la app, de lo contrario abandona el juego."
                 android:textColor="@color/white"
-                android:textSize="16sp" /> <!-- Criterio 5 -->
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                 android:text="¿Quién gana?"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:textStyle="bold" /> <!-- Criterio 6 -->
+                android:textStyle="bold" /> <!-- Bold de quien gana-->
 
             <TextView
                 android:layout_width="match_parent"
@@ -75,9 +75,9 @@
                 android:layout_marginTop="10dp"
                 android:text="Gana el último jugador que no abandone el juego."
                 android:textColor="@color/white"
-                android:textSize="16sp" /> <!-- Criterio 7 -->
+                android:textSize="16sp" />
 
-            <!-- Criterio 8: Animación de triunfo -->
+            <!-- Animación de triunfo -->
             <ImageView
                 android:id="@+id/imgTriumph"
                 android:layout_width="200dp"

@@ -9,58 +9,56 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:gravity="center">
 
-        <!-- Título Negro Bold centrado -->
+        <!--Título Negro Bold centrado -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:text="Agregar reto"
+            android:text="Editar Reto"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"/>
 
-        <!-- Hint y línea naranja -->
+        <!--Caja de texto con línea naranja -->
         <EditText
-            android:id="@+id/etNuevoReto"
+            android:id="@+id/etEditarReto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:backgroundTint="#FF4500"
-            android:hint="Escriba el reto"
-            android:inputType="textCapSentences"
-            android:textColor="#333333" />
+            android:inputType="textCapSentences" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center">
 
-            <!-- Botón Cancelar -->
+            <!-- Botón Cancelar Naranja -->
             <Button
-                android:id="@+id/btnCancelarDialog"
+                android:id="@+id/btnCancelarEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="#FF4500"
                 android:text="Cancelar"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#FF4500"
                 android:textColor="#FFFFFF" />
 
-            <!--  Botón Guardar  -->
+            <!--Botón Guardar Naranja -->
             <Button
-                android:id="@+id/btnGuardarDialog"
+                android:id="@+id/btnGuardarEdit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Guardar"
-                android:textColor="#FFFFFF"
-                android:enabled="false"
-                android:backgroundTint="#CCCCCC" />
+                android:backgroundTint="#FF4500"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
