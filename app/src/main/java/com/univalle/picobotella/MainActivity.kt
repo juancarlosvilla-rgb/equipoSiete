@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // HU 4.0 Criterio 5: Ver y agregar retos
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
                 if (isAudioOn) mediaPlayerFondo?.pause()
@@ -111,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // HU 4.0 Criterio 6: Compartir
         btnShare.setOnClickListener {
             aplicarAnimacionToque(it) {
                 val eslogan = "App pico botella. Solo los valientes lo juegan !!\nhttps://play.google.com/store/apps/details?id=com.nequi.MobileApp"

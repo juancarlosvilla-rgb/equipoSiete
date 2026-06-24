@@ -42,7 +42,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "PicoBotella.
         db.close()
     }
 
-    // Listar (HU 6.0) - Criterio 6: El más reciente arriba
+    // Listar (HU 6.0) - El más reciente arriba
     fun obtenerRetos(): MutableList<RetoModel> {
         val lista = mutableListOf<RetoModel>()
         val db = this.readableDatabase
@@ -54,6 +54,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "PicoBotella.
         }
         cursor.close()
         return lista
+    }
+
+    fun obtenerRetoAleatorio(): String {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT descripcion FROM retos ORDER BY RANDOM() LIMIT 1", null)
+        var reto = "¡No hay retos guardados!"
+        if (cursor.moveToFirst()) {
+            reto = cursor.getString(0)
+        }
+        cursor.close()
+        return reto
     }
 }
 
