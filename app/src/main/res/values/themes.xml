@@ -1,8 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PicoBotella" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.PicoBotella" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Colores base para que combinen con tu diseño negro/naranja -->
+        <item name="colorPrimary">@color/purple_main</item>
+        <item name="colorSecondary">#FF3D00</item>
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <style name="Theme.PicoBotella" parent="Base.Theme.PicoBotella" />

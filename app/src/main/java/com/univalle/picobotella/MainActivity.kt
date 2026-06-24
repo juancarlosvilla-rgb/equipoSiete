@@ -19,10 +19,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.net.URL
 import kotlin.concurrent.thread
 
+@AndroidEntryPoint // Etiqueta necesaria para Dagger Hilt (RA-1)
 class MainActivity : AppCompatActivity() {
 
     // Variables de Audio
@@ -90,7 +92,9 @@ class MainActivity : AppCompatActivity() {
         // HU 5.0: Instrucciones
         btnInstructions.setOnClickListener {
             aplicarAnimacionToque(it) {
-                if (isAudioOn) mediaPlayerFondo?.pause()
+                if (isAudioOn) {
+                    mediaPlayerFondo?.pause()
+                }
                 val intent = Intent(this, InstruccionesActivity::class.java)
                 startActivity(intent)
             }
@@ -99,46 +103,68 @@ class MainActivity : AppCompatActivity() {
         // HU 6.0: Ver Retos
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
-                if (isAudioOn) mediaPlayerFondo?.pause()
+                if (isAudioOn) mediaPlayerFondo?.pause() // Pausa audio
                 val intent = Intent(this, RetosActivity::class.java)
                 startActivity(intent)
             }
         }
 
-        // HU 10.0: Compartir
+        // HU 10.0: Lógica compartir la aplicación
         btnShare.setOnClickListener {
             aplicarAnimacionToque(it) {
+                // Criterio 2: Definir el mensaje exacto solicitado
                 val tituloApp = "App pico botella."
                 val eslogan = "Solo los valientes lo juegan !!"
                 val urlApp = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
+
                 val mensajeFinal = "$tituloApp\n$eslogan\n$urlApp"
 
+                // Intent para mostrar el Bottom Sheet del sistema
                 val intentCompartir = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, mensajeFinal)
                     type = "text/plain"
                 }
-                startActivity(Intent.createChooser(intentCompartir, "Compartir con:"))
+
+                // Mostrar el selector de aplicaciones (Chooser)
+                val chooser = Intent.createChooser(intentCompartir, "Compartir con:")
+                startActivity(chooser)
             }
         }
+    }
+
+    // --- FUNCIONES DE CICLO DE VIDA (FUERA DE ONCREATE) ---
+
+    // Criterio 3 HU 5.0: Restablecer audio al volver de las instrucciones
+    override fun onRestart() {
+        super.onRestart()
+        if (isAudioOn) {
+            mediaPlayerFondo?.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayerFondo?.release()
+        mediaPlayerFondo = null
     }
 
     // --- LÓGICA HU 11.0 (GIRO Y CUENTA REGRESIVA) ---
 
     private fun lanzarGiroBotella(botella: ImageView, contador: TextView, boton: Button) {
         isSpinning = true
-        boton.visibility = View.GONE // Visibilidad del boton despues de girar la botella
+        boton.visibility = View.GONE
         boton.clearAnimation()
 
-        if (isAudioOn) mediaPlayerFondo?.pause() // Pausar música hasta que ciere el dialogo del reto
+        if (isAudioOn) mediaPlayerFondo?.pause()
 
-        soundSpin = MediaPlayer.create(this, R.raw.sonido_giro) // Criterio 2
+        soundSpin = MediaPlayer.create(this, R.raw.sonido_giro)
         soundSpin?.start()
 
-        val tiempoGiro = (3000..5000).random().toLong() // Tiempo de giro aleatorio de 3 a 5 segundos
+        val tiempoGiro = (3000..5000).random().toLong()
         val vueltasExtra = (5..10).random()
         val gradosAleatorios = (vueltasExtra * 360) + (0..360).random()
-        val anguloObjetivo = ultimoAngulo + gradosAleatorios // Ultimo angulo desde donde gira la botella
+        val anguloObjetivo = ultimoAngulo + gradosAleatorios
 
         botella.animate()
             .rotation(anguloObjetivo)
@@ -150,14 +176,13 @@ class MainActivity : AppCompatActivity() {
                 soundSpin = null
 
                 ultimoAngulo = anguloObjetivo
-                iniciarCuentaRegresivaFinal(contador, boton) // Iniciar contador
+                iniciarCuentaRegresivaFinal(contador, boton)
             }
             .start()
     }
 
     private fun iniciarCuentaRegresivaFinal(contador: TextView, boton: Button) {
         contador.visibility = View.VISIBLE
-        // Cuenta de 3 a 0
         object : CountDownTimer(4000, 1000) {
             override fun onTick(ms: Long) {
                 val segundos = ms / 1000
@@ -165,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onFinish() {
                 contador.visibility = View.GONE
-                mostrarDialogoRetoAleatorio() // Criterio 6 HU 11 y HU 12 completa
+                mostrarDialogoRetoAleatorio()
                 boton.visibility = View.VISIBLE
                 iniciarParpadeo(boton)
                 isSpinning = false
@@ -173,7 +198,6 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    // --- HU 12.0: MOSTRAR RETO ALEATORIO CON POKÉMON API ---
     private fun mostrarDialogoRetoAleatorio() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_reto_aleatorio, null)
         val builder = AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
@@ -184,11 +208,9 @@ class MainActivity : AppCompatActivity() {
         val imgPoke = dialogView.findViewById<ImageView>(R.id.imgPokemon)
         val btnCerrar = dialogView.findViewById<Button>(R.id.btnCerrarReto)
 
-        // HU 12: Traer reto aleatorio de SQLite
         val db = DatabaseHelper(this)
         txtReto.text = db.obtenerRetoAleatorio()
 
-        // HU 12: Consumir API de Pokemon
         thread {
             try {
                 val apiResponse = URL("https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json").readText()
@@ -207,11 +229,9 @@ class MainActivity : AppCompatActivity() {
 
         btnCerrar.setOnClickListener {
             dialog.dismiss()
-            if (isAudioOn) mediaPlayerFondo?.start() // Criterio 8 HU 11
+            if (isAudioOn) mediaPlayerFondo?.start()
         }
     }
-
-    // --- FUNCIONES AUXILIARES ---
 
     private fun alternarAudio(boton: ImageButton) {
         if (isAudioOn) {
@@ -239,19 +259,8 @@ class MainActivity : AppCompatActivity() {
         button.startAnimation(anim)
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        if (isAudioOn) mediaPlayerFondo?.start()
-    }
-
     override fun onPause() {
         super.onPause()
         mediaPlayerFondo?.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayerFondo?.release()
-        soundSpin?.release()
     }
 }
