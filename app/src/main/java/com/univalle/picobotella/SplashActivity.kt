@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // 1. FORMA MODERNA DE OCULTAR BARRAS (Quita los Warnings de systemUiVisibility)
+        // 1. FORMA MODERNA DE OCULTAR BARRAS
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
@@ -29,12 +29,12 @@ class SplashActivity : AppCompatActivity() {
         val animacion = AnimationUtils.loadAnimation(this, R.anim.splash_anim)
         botella.startAnimation(animacion)
 
-        // 3. FORMA SEGURA DE ESPERAR 5 SEGUNDOS (Quita el Warning de GlobalScope)
+        // 3. FORMA SEGURA DE ESPERAR 5 SEGUNDOS
         lifecycleScope.launch {
-            delay(5000) // 5 segundos exactos (Criterio 4)
-            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            delay(5000) // 5 segundos exactos
+            val intent = Intent(this@SplashActivity, LoginActivity::class.java) // Cambia MainActivity por LoginActivity
             startActivity(intent)
-            finish() // Criterio 5: Finalizar para no volver atrás
+            finish()
         }
     }
 }
