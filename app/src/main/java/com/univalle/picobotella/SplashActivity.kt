@@ -32,9 +32,9 @@ class SplashActivity : AppCompatActivity() {
         // 3. FORMA SEGURA DE ESPERAR 5 SEGUNDOS
         lifecycleScope.launch {
             delay(5000) // 5 segundos exactos
-            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            val intent = Intent(this@SplashActivity, LoginActivity::class.java) // Cambia MainActivity por LoginActivity
             startActivity(intent)
-            finish() //Finalizar para no volver atrás
+            finish()
         }
     }
 }
