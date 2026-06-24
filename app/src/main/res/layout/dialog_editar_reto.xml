@@ -13,7 +13,7 @@
         android:padding="20dp"
         android:gravity="center">
 
-        <!-- Criterio 2: Título Negro Bold centrado -->
+        <!--Título Negro Bold centrado -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="15dp"/>
 
-        <!-- Criterio 3: Caja de texto con línea naranja -->
+        <!--Caja de texto con línea naranja -->
         <EditText
             android:id="@+id/etEditarReto"
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center">
 
-            <!-- Criterio 4: Botón Cancelar Naranja -->
+            <!-- Botón Cancelar Naranja -->
             <Button
                 android:id="@+id/btnCancelarEdit"
                 android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:backgroundTint="#FF4500"
                 android:textColor="#FFFFFF" />
 
-            <!-- Criterio 5: Botón Guardar Naranja -->
+            <!--Botón Guardar Naranja -->
             <Button
                 android:id="@+id/btnGuardarEdit"
                 android:layout_width="0dp"
