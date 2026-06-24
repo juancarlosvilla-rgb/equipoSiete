@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.dagger.hilt.android)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -48,7 +48,7 @@ dependencies {
 
     // 2. Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
+    "kapt"("com.google.dagger:hilt-compiler:2.48")
 
     // 3. Arquitectura MVVM y UI
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
@@ -60,6 +60,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

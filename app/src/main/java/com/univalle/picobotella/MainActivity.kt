@@ -12,14 +12,11 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.net.URL
@@ -52,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val btnInstructions = findViewById<ImageButton>(R.id.btnInstructions)
         val btnAddChallenge = findViewById<ImageButton>(R.id.btnAddChallenge)
         val btnShare = findViewById<ImageButton>(R.id.btnShare)
-        val btnLogout = findViewById<ImageButton>(R.id.btnLogout) // NUEVO
+        val btnLogout = findViewById<ImageButton>(R.id.btnLogout)
 
         // 2. Iniciar música de fondo
         mediaPlayerFondo = MediaPlayer.create(this, R.raw.musica_fondo)
@@ -71,23 +68,17 @@ class MainActivity : AppCompatActivity() {
 
         // --- LÓGICA DE LA TOOLBAR ---
 
-        // HU 4.0 Criterio 7: Cerrar Sesión
         btnLogout.setOnClickListener {
             aplicarAnimacionToque(it) {
-                // 1. Cerrar sesión en Firebase
                 FirebaseAuth.getInstance().signOut()
-
-                // 2. Ir al Login y limpiar el historial de ventanas
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-
-                Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // HU 4.0 Criterio 2: Calificar (Google Play Store)
         btnStar.setOnClickListener {
             aplicarAnimacionToque(it) {
                 val urlNequi = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp"
@@ -100,19 +91,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // HU 4.0 Criterio 3: Control de Volumen
         btnVolume.setOnClickListener {
             aplicarAnimacionToque(it) {
                 alternarAudio(btnVolume)
             }
         }
 
-        // HU 4.0 Criterio 4: Instrucciones
         btnInstructions.setOnClickListener {
             aplicarAnimacionToque(it) {
                 if (isAudioOn) mediaPlayerFondo?.pause()
-                val intent = Intent(this, InstruccionesActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, InstruccionesActivity::class.java))
             }
         }
 
@@ -120,30 +108,24 @@ class MainActivity : AppCompatActivity() {
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
                 if (isAudioOn) mediaPlayerFondo?.pause()
-                val intent = Intent(this, RetosActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, RetosActivity::class.java))
             }
         }
 
         // HU 4.0 Criterio 6: Compartir
         btnShare.setOnClickListener {
             aplicarAnimacionToque(it) {
-                val tituloApp = "App pico botella."
-                val eslogan = "Solo los valientes lo juegan !!"
-                val urlApp = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
-                val mensajeFinal = "$tituloApp\n$eslogan\n$urlApp"
-
-                val intentCompartir = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, mensajeFinal)
+                val eslogan = "App pico botella. Solo los valientes lo juegan !!\nhttps://play.google.com/store/apps/details?id=com.nequi.MobileApp"
+                val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, eslogan)
                 }
-                startActivity(Intent.createChooser(intentCompartir, "Compartir con:"))
+                startActivity(Intent.createChooser(intent, "Compartir con:"))
             }
         }
     }
 
-    // --- FUNCIONES DE APOYO ---
+    // --- LÓGICA DE GIRO ---
 
     private fun lanzarGiroBotella(botella: ImageView, contador: TextView, boton: Button) {
         isSpinning = true
@@ -178,8 +160,7 @@ class MainActivity : AppCompatActivity() {
         contador.visibility = View.VISIBLE
         object : CountDownTimer(4000, 1000) {
             override fun onTick(ms: Long) {
-                val segundos = ms / 1000
-                contador.text = segundos.toString()
+                contador.text = (ms / 1000).toString()
             }
             override fun onFinish() {
                 contador.visibility = View.GONE
@@ -191,6 +172,7 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
+    // --- HU 12.0 ACTUALIZADA: RETO PRIVADO DESDE FIRESTORE + POKEMON API ---
     private fun mostrarDialogoRetoAleatorio() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_reto_aleatorio, null)
         val builder = AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
@@ -201,9 +183,29 @@ class MainActivity : AppCompatActivity() {
         val imgPoke = dialogView.findViewById<ImageView>(R.id.imgPokemon)
         val btnCerrar = dialogView.findViewById<Button>(R.id.btnCerrarReto)
 
-        val db = DatabaseHelper(this)
-        txtReto.text = db.obtenerRetoAleatorio()
+        // 1. CARGAR RETO ALEATORIO DESDE LA CARPETA PRIVADA DEL USUARIO (UID)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            val dbFirestore = FirebaseFirestore.getInstance()
+            dbFirestore.collection("usuarios").document(uid).collection("mis_retos")
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    if (!snapshot.isEmpty) {
+                        val listaDocumentos = snapshot.documents
+                        val documentoAzar = listaDocumentos.random()
+                        txtReto.text = documentoAzar.getString("descripcion") ?: "Reto sin descripción"
+                    } else {
+                        txtReto.text = "¡No tienes retos guardados en tu cuenta!"
+                    }
+                }
+                .addOnFailureListener {
+                    txtReto.text = "Error al conectar con la nube"
+                }
+        } else {
+            txtReto.text = "Error: Usuario no identificado"
+        }
 
+        // 2. CARGAR POKEMON DE LA API (HILO SECUNDARIO)
         thread {
             try {
                 val apiResponse = URL("https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json").readText()
@@ -213,7 +215,10 @@ class MainActivity : AppCompatActivity() {
                 val imgUrl = randomPoke.getString("img").replace("http://", "https://")
 
                 runOnUiThread {
-                    Glide.with(this@MainActivity).load(imgUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imgPoke)
+                    Glide.with(this@MainActivity)
+                        .load(imgUrl)
+                        .placeholder(android.R.drawable.ic_menu_gallery)
+                        .into(imgPoke)
                 }
             } catch (e: Exception) { e.printStackTrace() }
         }
@@ -223,6 +228,8 @@ class MainActivity : AppCompatActivity() {
             if (isAudioOn) mediaPlayerFondo?.start()
         }
     }
+
+    // --- FUNCIONES AUXILIARES ---
 
     private fun alternarAudio(boton: ImageButton) {
         if (isAudioOn) {
