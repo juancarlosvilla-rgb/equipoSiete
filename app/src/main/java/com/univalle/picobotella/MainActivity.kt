@@ -19,22 +19,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.net.URL
 import kotlin.concurrent.thread
 
-@AndroidEntryPoint // Etiqueta necesaria para Dagger Hilt (RA-1)
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     // Variables de Audio
-    private var mediaPlayerFondo: MediaPlayer? = null // Música ambiente
-    private var soundSpin: MediaPlayer? = null       // Sonido de giro
+    private var mediaPlayerFondo: MediaPlayer? = null
+    private var soundSpin: MediaPlayer? = null
 
     // Variables de Estado
     private var isAudioOn = true
     private var isSpinning = false
-    private var ultimoAngulo = 0f // Criterio 4 HU 11: Guardar posición previa
+    private var ultimoAngulo = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +52,17 @@ class MainActivity : AppCompatActivity() {
         val btnInstructions = findViewById<ImageButton>(R.id.btnInstructions)
         val btnAddChallenge = findViewById<ImageButton>(R.id.btnAddChallenge)
         val btnShare = findViewById<ImageButton>(R.id.btnShare)
+        val btnLogout = findViewById<ImageButton>(R.id.btnLogout) // NUEVO
 
-        // 2. Iniciar música de fondo (HU 2.0 )
+        // 2. Iniciar música de fondo
         mediaPlayerFondo = MediaPlayer.create(this, R.raw.musica_fondo)
         mediaPlayerFondo?.isLooping = true
         if (isAudioOn) mediaPlayerFondo?.start()
 
-        // 3. Iniciar parpadeo del botón (HU 2.0 )
+        // 3. Iniciar parpadeo del botón
         iniciarParpadeo(btnPresioname)
 
-        // 4. Lógica del Giro de Botella (HU 11.0)
+        // 4. Lógica del Giro de Botella
         btnPresioname.setOnClickListener {
             if (!isSpinning) {
                 lanzarGiroBotella(imgBotella, txtContador, btnPresioname)
@@ -69,7 +71,23 @@ class MainActivity : AppCompatActivity() {
 
         // --- LÓGICA DE LA TOOLBAR ---
 
-        // HU 4.0: Calificar
+        // HU 4.0 Criterio 7: Cerrar Sesión
+        btnLogout.setOnClickListener {
+            aplicarAnimacionToque(it) {
+                // 1. Cerrar sesión en Firebase
+                FirebaseAuth.getInstance().signOut()
+
+                // 2. Ir al Login y limpiar el historial de ventanas
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+
+                Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // HU 4.0 Criterio 2: Calificar (Google Play Store)
         btnStar.setOnClickListener {
             aplicarAnimacionToque(it) {
                 val urlNequi = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp"
@@ -82,74 +100,50 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Control de Volumen (HU 3.0)
+        // HU 4.0 Criterio 3: Control de Volumen
         btnVolume.setOnClickListener {
             aplicarAnimacionToque(it) {
                 alternarAudio(btnVolume)
             }
         }
 
-        // HU 5.0: Instrucciones
+        // HU 4.0 Criterio 4: Instrucciones
         btnInstructions.setOnClickListener {
             aplicarAnimacionToque(it) {
-                if (isAudioOn) {
-                    mediaPlayerFondo?.pause()
-                }
+                if (isAudioOn) mediaPlayerFondo?.pause()
                 val intent = Intent(this, InstruccionesActivity::class.java)
                 startActivity(intent)
             }
         }
 
-        // HU 6.0: Ver Retos
+        // HU 4.0 Criterio 5: Ver y agregar retos
         btnAddChallenge.setOnClickListener {
             aplicarAnimacionToque(it) {
-                if (isAudioOn) mediaPlayerFondo?.pause() // Pausa audio
+                if (isAudioOn) mediaPlayerFondo?.pause()
                 val intent = Intent(this, RetosActivity::class.java)
                 startActivity(intent)
             }
         }
 
-        // HU 10.0: Lógica compartir la aplicación
+        // HU 4.0 Criterio 6: Compartir
         btnShare.setOnClickListener {
             aplicarAnimacionToque(it) {
-                // Criterio 2: Definir el mensaje exacto solicitado
                 val tituloApp = "App pico botella."
                 val eslogan = "Solo los valientes lo juegan !!"
                 val urlApp = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
-
                 val mensajeFinal = "$tituloApp\n$eslogan\n$urlApp"
 
-                // Intent para mostrar el Bottom Sheet del sistema
                 val intentCompartir = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, mensajeFinal)
                     type = "text/plain"
                 }
-
-                // Mostrar el selector de aplicaciones (Chooser)
-                val chooser = Intent.createChooser(intentCompartir, "Compartir con:")
-                startActivity(chooser)
+                startActivity(Intent.createChooser(intentCompartir, "Compartir con:"))
             }
         }
     }
 
-    // --- FUNCIONES DE CICLO DE VIDA (FUERA DE ONCREATE) ---
-
-    // Criterio 3 HU 5.0: Restablecer audio al volver de las instrucciones
-    override fun onRestart() {
-        super.onRestart()
-        if (isAudioOn) {
-            mediaPlayerFondo?.start()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayerFondo?.release()
-        mediaPlayerFondo = null
-    }
-
-    // --- LÓGICA HU 11.0 (GIRO Y CUENTA REGRESIVA) ---
+    // --- FUNCIONES DE APOYO ---
 
     private fun lanzarGiroBotella(botella: ImageView, contador: TextView, boton: Button) {
         isSpinning = true
@@ -174,7 +168,6 @@ class MainActivity : AppCompatActivity() {
                 soundSpin?.stop()
                 soundSpin?.release()
                 soundSpin = null
-
                 ultimoAngulo = anguloObjetivo
                 iniciarCuentaRegresivaFinal(contador, boton)
             }
@@ -220,11 +213,9 @@ class MainActivity : AppCompatActivity() {
                 val imgUrl = randomPoke.getString("img").replace("http://", "https://")
 
                 runOnUiThread {
-                    Glide.with(this).load(imgUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imgPoke)
+                    Glide.with(this@MainActivity).load(imgUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imgPoke)
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            } catch (e: Exception) { e.printStackTrace() }
         }
 
         btnCerrar.setOnClickListener {
@@ -259,8 +250,21 @@ class MainActivity : AppCompatActivity() {
         button.startAnimation(anim)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        if (isAudioOn) mediaPlayerFondo?.start()
+    }
+
     override fun onPause() {
         super.onPause()
         mediaPlayerFondo?.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayerFondo?.release()
+        mediaPlayerFondo = null
+        soundSpin?.release()
+        soundSpin = null
     }
 }
